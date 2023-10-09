@@ -1,0 +1,224 @@
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                                                    Analysis
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+-findSlice(const object&)
+
+template <typename T>
+int List<T>::findSlice(const List<T> & rhs){ //check???
+    int count = 0;
+    if(rhs.theSize > theSize){
+        return count;
+    }
+
+    iterator itr = begin();
+
+    for(int i = 0; i < theSize; i++){
+        //std::cout << itr.current->data << "\n";
+        const_iterator itr_itr = itr;
+        const_iterator itrRhs = rhs.begin();
+
+        for(int j = i; j < rhs.theSize; j++){
+            if(*itr_itr != *itrRhs){
+			    break;
+            }
+		    itr_itr++;
+		    itrRhs++;
+        }
+        if(itrRhs == rhs.end()){
+		    count++;
+        }
+	    itr++;
+    }
+    return count;
+}
+
+The worse-case scenario for the run-time complexity of findSlice(const object&) would be if the whole List were to be 
+traversed and not find the const obj& slice. Each element would be compared with the slice by checking one-by-one if
+a match is present before determining if the counter should be incremented; the counter is returned to show the number
+of slice matches. The expression to calculate total number of operations ((a+b)N * N)+ N + 3 , where a is the number 
+of operations in the for loop used to initially traverse through the list and b is the number of operations in the 
+nested for loop. a+b is equal to some number, c, and the expression can be rewritten as (cN * N) + N + 3, or 
+cN^2 + N + 3. Since the highest order present is N^2, the run-time complexity in the worst-case scenario is O(N^2).
+
+Tests (Lists with 10 items):
+100 Random Elements
+findSlice 100-item list: 127 usec
+findSlice 100-item list: 137 usec
+findSlice 100-item list: 127 usec
+findSlice 100-item list: 127 usec
+findSlice 100-item list: 131 usec
+Average: 129.8
+
+1000 Random Elements
+findSlice 1000-item list: 7583 usec
+findSlice 1000-item list: 6974 usec
+findSlice 1000-item list: 7495 usec
+findSlice 1000-item list: 7445 usec
+findSlice 1000-item list: 7177 usec
+Average: 7334.8
+
+10,000 Random Elements
+findSlice 10000-item list: 403449 usec
+findSlice 10000-item list: 401015 usec
+findSlice 10000-item list: 405544 usec
+findSlice 10000-item list: 411955 usec
+findSlice 10000-item list: 393357 usec
+Average: 403,064
+
+100,000 Random Elements
+findSlice 100000-item list: 39048128 usec
+findSlice 100000-item list: 39396920 usec
+findSlice 100000-item list: 39364450 usec
+findSlice 100000-item list: 39149971 usec
+findSlice 100000-item list: 38584692 usec
+Average: 39,108,832.2
+
+Tests (Lists with 50 items):
+100 Random Elements
+findSlice 100-item list: 108 usec
+
+1000 Random Elements
+findSlice 1000-item list: 7394 usec
+
+10,000 Random Elements
+findSlice 10000-item list: 400667 usec
+Average: 403,064
+
+100,000 Random Elements
+findSlice 100000-item list: 39320462 usec
+
+Tests (Lists with 250 items):
+100 Random Elements
+findSlice 100-item list: 127 usec
+
+1000 Random Elements
+findSlice 1000-item list: 6903 usec
+
+10,000 Random Elements
+findSlice 10000-item list: 400610 usec
+Average: 403,064
+
+100,000 Random Elements
+findSlice 100000-item list: 39028177 usec
+
+~O(N^2)
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+-deduplicate()
+
+template <typename T>
+void List<T>::deduplicate(){ //???
+    for(iterator itr = begin(); itr != end(); ++itr){
+        auto pos = itr;
+        while(++pos != end())
+            if(*pos == *itr){
+                erase(pos);
+            }
+    }
+}
+
+The worse-case scenario for the run-time complexity of deduplicate() would be if the whole List had to be 
+traversed twice to compare each element within each node by checking for uniqueness one-by-one before determining 
+if the element should be erased based on if it is a duplicate or not. The expression to calculate total number 
+of operations would be (a+bN)N + 3, where a is the number of operations in the for loop used to initially 
+traverse through the list and b is the number of operations in the while loop. a+b is equal to some number, c,
+and the expression can be rewritten as (cN)N + 3, or cN^2 + 3. Since the highest order present is N^2, the 
+run-time complexity in the worst-case scenario is O(N^2).
+
+Tests:
+100 Random Elements
+deduplicate 100-item list: 121 usec
+deduplicate 100-item list: 131 usec
+deduplicate 100-item list: 121 usec
+deduplicate 100-item list: 120 usec
+deduplicate 100-item list: 125 usec
+Average: 123.6
+
+1000 Random Elements
+deduplicate 1000-item list: 7560 usec
+deduplicate 1000-item list: 6956 usec
+deduplicate 1000-item list: 7475 usec
+deduplicate 1000-item list: 7426 usec
+deduplicate 1000-item list: 7155 usec
+Average: 7,314.4
+
+10,000 Random Elements
+deduplicate 10000-item list: 403249 usec
+deduplicate 10000-item list: 400571 usec
+deduplicate 10000-item list: 405117 usec
+deduplicate 10000-item list: 411513 usec
+deduplicate 10000-item list: 393264 usec
+Average: 402,742.8
+
+100,000 Random Elements
+deduplicate 100000-item list: 39046238 usec
+deduplicate 100000-item list: 39394843 usec
+deduplicate 100000-item list: 39362456 usec
+deduplicate 100000-item list: 39147998 usec
+deduplicate 100000-item list: 38582937 usec
+Average: 39,106,894.4
+
+~O(N^2)
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+-reverse()
+
+template <typename T>
+void List<T>::reverse(){
+    int mid = theSize/2;
+    iterator itrBegin = begin();
+    iterator itrEnd = (--end());
+    
+    for(int i = 0; i < mid; ++i){
+        std::swap(*itrBegin, *itrEnd);
+        ++itrBegin;
+        --itrEnd;
+    }
+
+}
+
+The run-time complexity in the worst-case scanario of reverse() would be O(N) since the list transverses through
+both halves of the List from beginning-to-middle and end-to-middle. Each element traversed is swapped (unless it
+is in the middle position, in which swapping would not matter), which occurs in all scenarios for list. This means
+that it takes N/2 operations to run the reverse function. Since coefficients acting on N are generally negligible
+and N/2 is the highest-order present, the run-time complexity in the worst-case scenario is O(N).
+
+Tests:
+
+100 Random Elements
+reverse 100-item list: 3 usec
+reverse 100-item list: 3 usec
+reverse 100-item list: 3 usec
+reverse 100-item list: 3 usec
+reverse 100-item list: 3 usec
+Average: 3 usec
+
+1000 Random Elements
+reverse 1000-item list: 26 usec
+reverse 1000-item list: 29 usec
+reverse 1000-item list: 28 usec
+reverse 1000-item list: 29 usec
+reverse 1000-item list: 29 usec
+Average: 28.2 usec
+
+10,000 Random Elements
+reverse 10000-item list: 281 usec
+reverse 10000-item list: 289 usec
+reverse 10000-item list: 287 usec
+reverse 10000-item list: 212 usec
+reverse 10000-item list: 262 usec
+Average: 266.2 usec
+
+100,000 Random Elements
+reverse 100000-item list: 1846 usec
+reverse 100000-item list: 1859 usec
+reverse 100000-item list: 1777 usec
+reverse 100000-item list: 1787 usec
+reverse 100000-item list: 1867 usec
+Average: 1827.2 usec
+
+~O(N)
